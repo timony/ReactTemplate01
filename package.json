@@ -1,0 +1,34 @@
+{
+  "name": "ReactWorkshopFrontend",
+  "version": "1.0.0",
+  "description": "React Workshop Frontend application",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babelify": "^8.0.0",
+    "browser-sync": "^2.23.5",
+    "browserify": "^15.2.0",
+    "eslint": "^4.15.0",
+    "exorcist": "^1.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^4.0.1",
+    "gulp-if-else": "^1.0.3",
+    "gulp-notify": "^3.2.0",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^5.0.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "reactify": "^1.1.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}

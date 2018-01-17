@@ -1,0 +1,19 @@
+{
+  "src": {
+    "scss": {
+      "sources": "./src/**/*.scss"
+    },
+    "js": [
+      "./src/**/*.js*"
+    ],
+    "html": "./src/*.html",
+    "app": "./src/App.jsx",
+    "tests": "./src/**/*.test.js*"
+  },
+  "dest": {
+    "rootFolder": "dist",
+    "css": "dist/css",
+    "jsFolder": "dist/js",
+    "jsFile": "app.js"
+  }
+}
