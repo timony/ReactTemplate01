@@ -7,6 +7,7 @@ import del from 'del';
 import eslint from 'gulp-eslint';
 import gulp from 'gulp';
 import inject from 'gulp-inject';
+import jest from 'jest';
 import open from 'gulp-open';
 import order from 'gulp-order';
 import path from 'path';
@@ -22,7 +23,7 @@ gulp.task('transform', ['lint'], () => {
     .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('build-react', () => {
+gulp.task('js', () => {
   const options = {
     entries: config.src.app,   // Entry point
     extensions: ['.js', '.jsx'],            // consider files with these extensions as modules
@@ -74,25 +75,39 @@ gulp.task('clean', () => {
   return del(['dist']);
 });
 
+gulp.task('test', done => {
+  jest.runCLI(
+    {coverage: true},
+    [ __dirname ]
+  )
+    .then(({ results }) => {
+      if (results.success) {
+        done();
+      } else {
+        throw new Error('Tests failed!');
+      }
+    })
+    .catch(done);
+});
+
 gulp.task('transpile', gulpSync.sync([
   'clean',
-  ['lint', 'build-react'],
+  ['lint', 'js'],
   'html:inject'
 ]));
 
 gulp.task('start-server', gulpSync.sync([
   'transpile'
-]));
-
-gulp.task('serve', ['start-server'], () => {
+]), () => {
   const connectOptions = {
     port: 9000,
     root: './dist'
   };
   connect.server({
-    port: 9000,
-    root: './dist',
-    livereload: true
+    port: connectOptions.port,
+    root: connectOptions.root,
+    livereload: true,
+    debug: false
   });
 
   const openOptions = {
@@ -100,6 +115,25 @@ gulp.task('serve', ['start-server'], () => {
   };
   gulp.src('./dist/index.html')
     .pipe(open(openOptions));
+});
+
+gulp.task('js:watch', gulpSync.sync(['js']), () => {
+  gulp.src('./dist')
+    .pipe(connect.reload());
+});
+gulp.task('html:watch', gulpSync.sync(['html:inject']), () => {
+  gulp.src('./dist')
+    .pipe(connect.reload());
+});
+gulp.task('css:watch', gulpSync.sync(['html:inject']), () => {
+  gulp.src('./dist')
+    .pipe(connect.reload());
+});
+
+gulp.task('serve', ['start-server'], () => {
+  gulp.watch('./src/**/*.js', ['js:watch']);
+  gulp.watch('./src/**/*.jsx', ['js:watch']);
+  gulp.watch('./src/index.html', ['html:watch']);
 });
 
 gulp.task('default', ['serve']);
