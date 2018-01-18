@@ -16,89 +16,90 @@ const gulpSync = require('gulp-sync')(gulp);
 
 // obsolete
 gulp.task('transform', ['lint'], () => {
-    return gulp
-        .src(config.src.js)
-        .pipe(babel())
-        .pipe(gulp.dest('dist/js'));
+  return gulp
+    .src(config.src.js)
+    .pipe(babel())
+    .pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('build-react', () => {
-    const options = {
-        entries: config.src.app,   // Entry point
-        extensions: ['.js', '.jsx'],            // consider files with these extensions as modules
-        debug: true,  // add resource map at the end of the file or not
-        paths: ["./src/"]           // This allows relative imports in require, with './scripts/' as root
-    };
+  const options = {
+    entries: config.src.app,   // Entry point
+    extensions: ['.js', '.jsx'],            // consider files with these extensions as modules
+    debug: true,  // add resource map at the end of the file or not
+    paths: ['./src/']           // This allows relative imports in require, with './scripts/' as root
+  };
 
-    return browserify(options)
-        .transform(babelify)
-        .bundle()
-        .pipe(source("app.js"))
-        .pipe(gulp.dest("./dist/js"));
+  return browserify(options)
+    .transform(babelify)
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe(gulp.dest('./dist/js'));
 });
 
 gulp.task('html:inject', () => {
-    const target = gulp.src(config.src.html);
-    const sources = gulp.src([
-            config.dest.css + '/*.css',
-            config.dest.jsFolder + '/*.js'
-        ],
-        {read: false}
-    );
+  const target = gulp.src(config.src.html);
+  const sources = gulp.src([
+      config.dest.css + '/*.css',
+      config.dest.jsFolder + '/*.js'
+    ],
+    {read: false}
+  );
 
-    const ordering = config.vendor.js.map(filePattern => path.basename(filePattern));
-    ordering.unshift('*.css');
+  const ordering = config.vendor.js.map(filePattern => path.basename(filePattern));
+  ordering.unshift('*.css');
 
-    const orderedSources = sources.pipe(order(ordering));
+  const orderedSources = sources.pipe(order(ordering));
 
-    return target
-        .pipe(inject(orderedSources, {
-            ignorePath: config.dest.rootFolder,
-            addRootSlash: false
-        }))
-        .pipe(gulp.dest(config.dest.rootFolder));
+  return target
+    .pipe(inject(orderedSources, {
+      ignorePath: config.dest.rootFolder,
+      addRootSlash: false
+    }))
+    .pipe(gulp.dest(config.dest.rootFolder));
 });
 
 gulp.task('lint', () => {
-    return gulp
-        .src([
-            'gulpfile.babel.js',
-            'src/**/*.js'
-        ])
-        .pipe(eslint())
-        .pipe(eslint.format());
+  return gulp
+    .src([
+      'gulpfile.babel.js',
+      'src/**/*.js',
+      'src/**/*.jsx'
+    ])
+    .pipe(eslint())
+    .pipe(eslint.format('node_modules/eslint-friendly-formatter'));
 });
 
 gulp.task('clean', () => {
-    return del(['dist']);
+  return del(['dist']);
 });
 
 gulp.task('transpile', gulpSync.sync([
-    'clean',
-    ['lint', 'build-react'],
-    'html:inject'
+  'clean',
+  ['lint', 'build-react'],
+  'html:inject'
 ]));
 
 gulp.task('start-server', gulpSync.sync([
-    'transpile'
+  'transpile'
 ]));
 
 gulp.task('serve', ['start-server'], () => {
-    const connectOptions = {
-        port: 9000,
-        root: './dist'
-    };
-    connect.server({
-        port: 9000,
-        root: './dist',
-        livereload: true
-    });
+  const connectOptions = {
+    port: 9000,
+    root: './dist'
+  };
+  connect.server({
+    port: 9000,
+    root: './dist',
+    livereload: true
+  });
 
-    const openOptions = {
-        uri: 'http://localhost:' + connectOptions.port
-    };
-    gulp.src('./dist/index.html')
-        .pipe(open(openOptions));
+  const openOptions = {
+    uri: 'http://localhost:' + connectOptions.port
+  };
+  gulp.src('./dist/index.html')
+    .pipe(open(openOptions));
 });
 
 gulp.task('default', ['serve']);

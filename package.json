@@ -12,6 +12,8 @@
     "browser-sync": "^2.23.5",
     "browserify": "^15.2.0",
     "eslint": "^4.15.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-plugin-react": "^7.5.1",
     "exorcist": "^1.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",

@@ -1,17 +1,15 @@
 import React from 'react';
 
 class Home extends React.Component {
+  render() {
+    const element = (
+      <div>Home page</div>
+    );
 
-    render() {
-
-        const element = (
-            <div>Home page</div>
-        );
-
-        return (
-            element
-        );
-    }
+    return (
+      element
+    );
+  }
 }
 
 export default Home;
