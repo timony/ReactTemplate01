@@ -15,5 +15,8 @@
     "css": "dist/css",
     "jsFolder": "dist/js",
     "jsFile": "app.js"
+  },
+  "vendor": {
+    "js": []
   }
 }

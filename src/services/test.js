@@ -1,3 +1,3 @@
-import _ from 'lodash'
+import _ from 'lodash';
 
-var a = "adfa"
+var a = "adfa";
